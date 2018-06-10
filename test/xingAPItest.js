@@ -1,21 +1,88 @@
-const assert = require('chai').assert;
-const request = require('supertest'),
-    should = require('should');
+const request = require('supertest');
+const should = require('should');
 
-describe("Something", function () {
-    var app = request('https://reqres.in');
+var util = require('./utils');
+var app = request('https://reqres.in');
 
-    it('Validate Customer #1', function (done) {
-        app
-            .get('/api/users?page=1')
+describe("Validate User Requests", function () {
+
+    it('Validate Single User Request', function (done) {
+        app.get('/api/users/1')
             .set('Accept', 'application/json')
             .expect(200)
             .expect('Content-Type', /json/)
             .end(function (err, res) {
                 if (err) return done(err);
-                res.body.should.have.property('page').and.be.equal(1);
-                res.body.should.have.property('page').and.be.equal(1);
-                console.log(res.body.data[1].first_name);
+                util.VerifyUser(res, 'George', 'Bluth', 1);
+                done();
+            })
+    });
+    it('Validate List Users Request', function (done) {
+        app.get('/api/users?page=1')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                util.VerifyListUser(res, 1, 3, 12, 4);
+                done();
+            })
+    });
+    it('Create New User Request', function (done) {
+        var params = { firstname: 'Sérgio', lastname: 'Reis' };
+        app.post('/api/users')
+            .send(params)
+            .set('Accept', 'application/json')
+            .expect(201)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                util.VerifyUserCreatedSuccessful(res, 'Sérgio', 'Reis');
+                done();
+            });
+    });
+    it('Update User Request (with PUT)', function (done) {
+        var params = { name: 'Sérgio', job: 'QAE' };
+        app.put('/api/users/2')
+            .send(params)
+            .set('Accept', 'application/json')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                util.VerifyUserUpdatedSuccessful(res, 'Sérgio', 'QAE');
+                done();
+            });
+    });
+    it('Update User Request (with PATCH)', function (done) {
+        var params = { name: 'Sérgio', job: 'QAE' };
+        app.patch('/api/users/2')
+            .send(params)
+            .set('Accept', 'application/json')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                util.VerifyUserUpdatedSuccessful(res, 'Sérgio', 'QAE');
+                done();
+            });
+    });
+    it('Delete User Request', function (done) {
+        app.delete('/api/users/2')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end(function (err, res) {
+                if (err) return done(err);
+                done();
+            });
+    });
+    it('Validate User Not Found Request', function (done) {
+        app.get('/api/users/23')
+            .set('Accept', 'application/json')
+            .expect(404)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
                 done();
             })
     });
