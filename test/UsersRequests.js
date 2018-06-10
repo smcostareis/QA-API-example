@@ -6,7 +6,7 @@ var app = request('https://reqres.in');
 
 describe("Validate User Requests", function () {
 
-    it('Validate Single User Request', function (done) {
+    it('Single User Request', function (done) {
         app.get('/api/users/1')
             .set('Accept', 'application/json')
             .expect(200)
@@ -17,7 +17,7 @@ describe("Validate User Requests", function () {
                 done();
             })
     });
-    it('Validate List Users Request', function (done) {
+    it('List Users Request', function (done) {
         app.get('/api/users?page=1')
             .set('Accept', 'application/json')
             .expect(200)
@@ -76,7 +76,7 @@ describe("Validate User Requests", function () {
                 done();
             });
     });
-    it('Validate User Not Found Request', function (done) {
+    it('User Not Found Request', function (done) {
         app.get('/api/users/23')
             .set('Accept', 'application/json')
             .expect(404)
@@ -87,4 +87,3 @@ describe("Validate User Requests", function () {
             })
     });
 });
-
