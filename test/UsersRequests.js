@@ -24,7 +24,7 @@ describe("Validate User Requests", function () {
             .expect('Content-Type', /json/)
             .end(function (err, res) {
                 if (err) return done(err);
-                util.VerifyListUser(res, 1, 3, 12, 4);
+                util.VerifyListResource(res, 1, 3, 12, 4);
                 done();
             })
     });
