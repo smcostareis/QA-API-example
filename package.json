@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "example": "mocha test/*.js --reporter mocha-simple-html-reporter --reporter-options output=report.html"
+    "report": "mocha test/*.js --reporter mocha-simple-html-reporter --reporter-options output=report.html"
   },
   "author": "Sérgio Reis",
   "license": "ISC",
